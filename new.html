@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasrahana Mehra - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #80deea);
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+            perspective: 1000px; /* Balanced perspective for pretty 3D */
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Header - Pretty Name Animation */
+        header {
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 188, 212, 0.2);
+            transform: translateZ(20px);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateZ(30px);
+            box-shadow: 0 15px 40px rgba(0, 188, 212, 0.3);
+        }
+
+        h1 {
+            font-size: 4.5em;
+            color: #00bcd4;
+            text-shadow: 0 0 8px rgba(0, 188, 212, 0.5);
+            animation: nameGlow 2s ease-in-out infinite alternate;
+            transform: translateZ(25px);
+        }
+
+        h2 {
+            font-size: 2.2em;
+            color: #ff4081;
+            margin: 10px 0;
+            transform: translateZ(15px);
+        }
+
+        .about-text {
+            font-size: 1.3em;
+            color: #444;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: textFloat 3s ease-in-out infinite;
+            transform: translateZ(10px);
+        }
+
+        /* Section Styling */
+        section {
+            margin: 50px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            transform: translateZ(10px);
+            box-shadow: 0 5px 20px rgba(0, 188, 212, 0.15);
+            transition: transform 0.5s ease;
+        }
+
+        section:hover {
+            transform: translateZ(20px);
+        }
+
+        .skills-grid, .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .skill-item, .project-item {
+            background: linear-gradient(135deg, #00bcd4, #b2ebf2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+        }
+
+        .skill-item:hover, .project-item:hover {
+            transform: translateZ(25px) rotateX(10deg);
+            box-shadow: 0 15px 30px rgba(0, 188, 212, 0.4);
+        }
+
+        .skill-item::before, .project-item::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: -1;
+            border-radius: 15px;
+        }
+
+        .skill-item:hover::before, .project-item:hover::before {
+            opacity: 1;
+        }
+
+        .skill-description, .project-description {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 15px;
+            font-size: 0.9em;
+            border-radius: 0 0 10px 10px;
+            z-index: 10;
+            transform: translateZ(15px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+            animation: slideInPretty 0.5s ease-out;
+        }
+
+        .skill-item.active .skill-description, .project-item.active .project-description {
+            display: block;
+        }
+
+        /* Contact Section */
+        .contact-item {
+            background: linear-gradient(135deg, #00bcd4, #b2ebf2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+            transform: translateZ(0);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .contact-item:hover {
+            transform: translateZ(15px);
+            box-shadow: 0 10px 25px rgba(0, 188, 212, 0.3);
+        }
+
+        .contact-item a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 1.1em;
+        }
+
+        .contact-item:hover a {
+            color: #ff4081;
+        }
+
+        /* Pretty 3D Animations */
+        @keyframes nameGlow {
+            0% { text-shadow: 0 0 5px rgba(0, 188, 212, 0.5), 0 0 10px rgba(0, 188, 212, 0.3); }
+            100% { text-shadow: 0 0 10px rgba(0, 188, 212, 0.7), 0 0 20px rgba(0, 188, 212, 0.5); }
+        }
+
+        @keyframes textFloat {
+            0%, 100% { transform: translateZ(10px) translateY(0); }
+            50% { transform: translateZ(15px) translateY(-5px); }
+        }
+
+        @keyframes slideInPretty {
+            0% { transform: translateZ(0) translateY(-15px) rotateX(-20deg); opacity: 0; }
+            100% { transform: translateZ(15px) translateY(0) rotateX(0); opacity: 1; }
+        }
+
+        @keyframes cardReveal {
+            0% { transform: translateZ(-20px) rotateY(90deg); opacity: 0; }
+            100% { transform: translateZ(0) rotateY(0); opacity: 1; }
+        }
+
+        .section-title {
+            font-size: 2.8em;
+            color: #ff4081;
+            text-shadow: 0 0 5px rgba(255, 64, 129, 0.3);
+            margin-bottom: 25px;
+            transform: translateZ(15px);
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 3em; }
+            h2 { font-size: 1.8em; }
+            .about-text { font-size: 1.1em; }
+            .section-title { font-size: 2.2em; }
+            .skill-item, .project-item, .contact-item { font-size: 1em; }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="profile-card">
+                <h1>Dasrahana Mehra</h1>
+                <h2>Web Developer | Hackathon Enthusiast</h2>
+                <p class="about-text">Hello! I’m Dasrahana Mehra from the serene hills of Uttarakhand. I’ve won one hackathon and participated in three, showcasing my passion for coding. What makes me stand out? My ability to turn complex problems into elegant solutions with a creative twist!</p>
+            </div>
+        </header>
+
+        <section class="skills">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    C
+                    <div class="skill-description">A powerful low-level language for system programming. I have 3 stars on HackerRank in C.</div>
+                </div>
+                <div class="skill-item">
+                    C++
+                    <div class="skill-description">An advanced language for competitive programming and software development. I have 3 stars on HackerRank in C++.</div>
+                </div>
+                <div class="skill-item">
+                    HTML
+                    <div class="skill-description">The backbone of web development for structuring content.</div>
+                </div>
+                <div class="skill-item">
+                    CSS
+                    <div class="skill-description">Styling language to make websites visually stunning.</div>
+                </div>
+                <div class="skill-item">
+                    JavaScript
+                    <div class="skill-description">Dynamic scripting for interactive web experiences.</div>
+                </div>
+                <div class="skill-item">
+                    Python
+                    <div class="skill-description">Versatile language for web, AI, and automation. I have 3 stars on HackerRank in Python.</div>
+                </div>
+                <div class="skill-item">
+                    Django
+                    <div class="skill-description">Python framework for rapid web development.</div>
+                </div>
+                <div class="skill-item">
+                    SQL
+                    <div class="skill-description">Database language for managing and querying data.</div>
+                </div>
+                <div class="skill-item">
+                    DSA with C++
+                    <div class="skill-description">Data Structures and Algorithms mastery using C++.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-item">
+                    Weather Forecasting
+                    <div class="project-description">A real-time weather app using APIs to predict conditions with a sleek UI.</div>
+                </div>
+                <div class="project-item">
+                    Blog Post
+                    <div class="project-description">A dynamic blogging platform with user authentication and rich text editing.</div>
+                </div>
+                <div class="project-item">
+                    Budget Calculator
+                    <div class="project-description">An intuitive tool to track expenses and savings with visual charts.</div>
+                </div>
+                <div class="project-item">
+                    To-Do List
+                    <div class="project-description">A productivity app with task prioritization and local storage support.</div>
+                </div>
+                <div class="project-item">
+                    Responsive Web Pages
+                    <div class="project-description">Fully responsive designs adapting to all screen sizes seamlessly.</div>
+                </div>
+                <div class="project-item">
+                    Hotel Website
+                    <div class="project-description">A booking platform with room previews and reservation features.</div>
+                </div>
+                <div class="project-item">
+                    Portfolio Website
+                    <div class="project-description">This very site! A showcase of my skills with interactive elements.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact">
+            <h2 class="section-title">Contact Me</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <span>Email:</span>
+                    <a href="mailto:dasrahana@example.com">dasrahana@example.com</a>
+                </div>
+                <div class="contact-item">
+                    <span>LinkedIn:</span>
+                    <a href="https://linkedin.com/in/dasrahana" target="_blank">linkedin.com/in/dasrahana</a>
+                </div>
+                <div class="contact-item">
+                    <span>GitHub:</span>
+                    <a href="https://github.com/dasrahana" target="_blank">github.com/dasrahana</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const skillItems = document.querySelectorAll('.skill-item');
+            const projectItems = document.querySelectorAll('.project-item');
+            const contactItems = document.querySelectorAll('.contact-item');
+
+            function animateItems(items, animation) {
+                items.forEach((item, index) => {
+                    item.style.animation = `${animation} 0.8s ease-out ${index * 0.1}s forwards`;
+                    item.style.opacity = '0'; // Initial opacity for animation
+
+                    item.addEventListener('click', () => {
+                        const isActive = item.classList.contains('active');
+                        items.forEach(i => i.classList.remove('active')); // Close others
+                        if (!isActive) {
+                            item.classList.add('active');
+                        }
+                    });
+                });
+            }
+
+            animateItems(skillItems, 'cardReveal');
+            animateItems(projectItems, 'cardReveal');
+            animateItems(contactItems, 'fadeIn');
+
+            // Close description when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.skill-item') && !e.target.closest('.project-item')) {
+                    skillItems.forEach(item => item.classList.remove('active'));
+                    projectItems.forEach(item => item.classList.remove('active'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
