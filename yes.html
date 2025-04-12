@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizCraft - Online Quiz Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #ffd166;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --lightgray: #e9ecef;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        /* Main Content Styles */
+        main {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px - 100px); /* Full height minus header and footer */
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+
+        /* Homepage Styles */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-description {
+            color: var(--gray);
+        }
+
+        .cta {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .cta-description {
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Login/Register Forms */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(58, 12, 163, 0.1) 100%);
+        }
+
+        .auth-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .auth-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--lightgray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .auth-footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .quiz-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .quiz-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .quiz-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .quiz-body {
+            padding: 20px;
+        }
+
+        .quiz-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .quiz-footer {
+            padding: 10px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-stats {
+            display: flex;
+            gap: 15px;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .quiz-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--lightgray);
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Create Quiz Form */
+        .form-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 1px solid var(--lightgray);
+            padding-bottom: 10px;
+        }
+
+        .question-card {
+            background-color: var(--lightgray);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .option-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option-input {
+            flex-grow: 1;
+        }
+
+        .option-radio {
+            margin-right: 5px;
+        }
+
+        .add-question-btn {
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--lightgray);
+        }
+
+        /* Taking Quiz Styles */
+        .quiz-info {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .quiz-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-info-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+        }
+
+        .quiz-info-meta {
+            color: var(--gray);
+            font-size: 0.875rem;
+            margin-bottom: 20px;
+        }
+
+        .quiz-info-description {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .question-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .options-list {
+            list-style-type: none;
+        }
+
+        .option-item {
+            background-color: var(--lightgray);
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .option-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .option-item.selected {
+            background-color: rgba(67, 97, 238, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .option-item.correct {
+            background-color: rgba(76, 201, 240, 0.2);
+            border: 1px solid var(--success);
+        }
+
+        .option-item.incorrect {
+            background-color: rgba(247, 37, 133, 0.2);
+            border: 1px solid var(--danger);
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .quiz-progress {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .progress-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .progress-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--lightgray);
+            color: var(--dark);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .progress-item.current {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .progress-item.answered {
+            background-color: rgba(67, 97, 238, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .timer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .timer.warning {
+            color: var(--warning);
+        }
+
+        .timer.danger {
+            color: var(--danger);
+        }
+
+        /* Results Styles */
+        .results-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .results-score {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        .score-card {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .score-value.correct {
+            color: var(--success);
+        }
+
+        .score-value.incorrect {
+            color: var(--danger);
+        }
+
+        .score-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .results-message {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 8px;
+        }
+
+        .results-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: white;
+            padding: 30px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s linear 0.3s, opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: scale(0.8);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--lightgray);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 0;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .btn {
+                font-size: 0.875rem;
+                padding: 8px 12px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .quiz-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .option-group {
+                flex-direction: column;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-footer button {
+                width: 100%;
+            }
+
+            .score-card {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo" id="home-link"><i class="fas fa-brain"></i>QuizCraft</a>
+                <div class="nav-links">
+                    <a href="#" class="active" id="home-nav">Home</a>
+                    <a href="#" id="explore-nav">Explore</a>
+                    <a href="#" id="about-nav">About</a>
+                    <a href="#" id="contact-nav">Contact</a>
+                </div>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="login-btn">Login</a>
+                    <a href="#" class="btn btn-primary" id="register-btn">Register</a>
+                </div>
+                <div class="user-info" style="display: none;">
+                    <div class="user-avatar">D</div>
+                    <span class="user-name">Darshana</span>
+                    <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container" id="main-content">
+            <!-- Content will be loaded here -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><i class="fas fa-brain"></i> QuizCraft</div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Support</a>
+                </div>
+                <div class="copyright">© 2025 QuizCraft. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Template -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title">Modal Title</h2>
+            <div id="modal-body">
+                <!-- Modal content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const mainContent = document.getElementById('main-content');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const homeLink = document.getElementById('home-link');
+        const homeNav = document.getElementById('home-nav');
+        const exploreNav = document.getElementById('explore-nav');
+        const aboutNav = document.getElementById('about-nav');
+        const contactNav = document.getElementById('contact-nav');
+        const authButtons = document.querySelector('.auth-buttons');
+        const userInfo = document.querySelector('.user-info');
+        const modal = document.getElementById('modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalTitle = document.querySelector('.modal-title');
+        const modalBody = document.getElementById('modal-body');
+
+        // State Management
+        let currentUser = null;
+        let quizzes = [];
+        let currentQuiz = null;
+        let userAnswers = [];
+        let timerInterval = null;
+
+        // Sample Data
+        const sampleUsers = [
+            { id: 1, name: 'Demo User', email: 'demo@example.com', password: 'password', initial: 'D' }
+        ];
+
+        const sampleQuizzes = [
+            {
+                id: 1,
+                title: 'Web Development Basics',
+                description: 'Test your knowledge of HTML, CSS, and JavaScript fundamentals.',
+                createdBy: 'Quiz Master',
+                createdAt: '2025-04-10',
+                questions: [
+                    {
+                        id: 1,
+                        text: 'What does HTML stand for?',
+                        options: [
+                            'Hyper Text Markup Language',
+                            'High Tech Modern Language',
+                            'Hyper Transfer Markup Language',
+                            'Home Tool Markup Language'
+                        ],
+                        correctOption: 0
+                    },
+                    {
+                        id: 2,
+                        text: 'Which CSS property is used to change the text color?',
+                        options: [
+                            'text-style',
+                            'font-color',
+                            'color',
+                            'text-color'
+                        ],
+                        correctOption: 2
+                    },
+                    {
+                        id: 3,
+                        text: 'Which of the following is NOT a JavaScript data type?',
+                        options: [
+                            'String',
+                            'Boolean',
+                            'Float',
+                            'Undefined'
+                        ],
+                        correctOption: 2
+                    },
+                    {
+                        id: 4,
+                        text: 'What does CSS stand for?',
+                        options: [
+                            'Computer Style Sheets',
+                            'Cascading Style Sheets',
+                            'Creative Style System',
+                            'Colorful Style Sheets'
+                        ],
+                        correctOption: 1
+                    },
+                    {
+                        id: 5,
+                        text: 'Which HTML tag is used to create a hyperlink?',
+                        options: [
+                            '<link>',
+                            '<a>',
+                            '<href>',
+                            '<url>'
+                        ],
+                        correctOption: 1
+                    }
+                ],
+                timeLimit: 300,
+                attempts: 245,
+                avgScore: 78
+            },
+            {
+                id: 2,
+                title: 'Data Structures Quiz',
+                description: 'Challenge yourself with questions about common data structures like arrays, linked lists, trees, and more.',
+                createdBy: 'Algorithm Expert',
+                createdAt: '2025-04-05',
+                questions: [
+                    {
+                        id: 1,
+                        text: 'Which data structure operates on a LIFO principle?',
+                        options: [
+                            'Queue',
+                            'Stack',
+                            'Linked List',
+                            'Binary Tree'
+                        ],
+                        correctOption: 1
+                    },
+                    {
+                        id: 2,
+                        text: 'What is the time complexity of searching in a sorted array using binary search?',
+                        options: [
+                            'O(1)',
+                            'O(log n)',
+                            'O(n)',
+                            'O(n log n)'
+                        ],
+                        correctOption: 1
+                    },
+                    {
+                        id: 3,
+                        text: 'Which of the following is NOT a balanced tree?',
+                        options: [
+                            'AVL Tree',
+                            'Red-Black Tree',
+                            'B-Tree',
+                            'Binary Search Tree'
+                        ],
+                        correctOption: 3
+                    }
+                ],
+                timeLimit: 180,
+                attempts: 128,
+                avgScore: 65
+            },
+            {
+                id: 3,
+                title: 'Python Programming',
+                description: 'Test your Python knowledge with questions covering basics to advanced concepts.',
+                createdBy: 'Python Lover',
+                createdAt: '2025-04-08',
+                questions: [
+                    {
+                        id: 1,
+                        text: 'Which of the following is NOT a built-in data type in Python?',
+                        options: [
+                            'List',
